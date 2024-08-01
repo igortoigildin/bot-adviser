@@ -16,8 +16,8 @@ type Storage interface {
 }
 
 type Page struct {
-	URL 		string
-	UserName	string
+	URL      string
+	UserName string
 }
 
 func (p Page) Hash() (string, error) {
@@ -30,6 +30,6 @@ func (p Page) Hash() (string, error) {
 	if _, err := io.WriteString(h, p.UserName); err != nil {
 		return "", e.Wrap("can't calculate hash", err)
 	}
-	
+
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
