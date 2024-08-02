@@ -8,4 +8,4 @@ Please create your bot as per core.telegram.org/bots and receive your -tg-bot-to
 
 To run this application locally, execute: 
 
-go run/main.go -tg-bot-token <your tg token>
+go run/main.go -tg-bot-token `your tg token`
