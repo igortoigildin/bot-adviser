@@ -4,20 +4,32 @@ import (
 	"flag"
 	"log"
 
-	"github.com/igortoigildin/bot-adviser/clients/telegram"
+	tgClient "github.com/igortoigildin/bot-adviser/clients/telegram"
+	event_consumer "github.com/igortoigildin/bot-adviser/consumer/event-consumer"
+	"github.com/igortoigildin/bot-adviser/events/telegram"
+	"github.com/igortoigildin/bot-adviser/storage/files"
 )
 
 const (
-	tgBotHost = "api.telegram.org"
+	tgBotHost   = "api.telegram.org"
+	storagePath = "files_storage"
+	batchSize   = 100
 )
 
 func main() {
+	eventsProcessor := telegram.New(tgClient.New(tgBotHost, mustToken()), files.New(storagePath))
 
-	_ = telegram.New(tgBotHost, mustToken())
+	log.Print("service started")
+
+	consumer := event_consumer.New(eventsProcessor, eventsProcessor, batchSize)
+
+	if err := consumer.Start(); err != nil {
+		log.Fatal("service is stopped", err)
+	}
 }
 
 func mustToken() string {
-	token := flag.String("token-bot-token", "", "token for access to telegram bot")
+	token := flag.String("tg-bot-token", "", "token for access to telegram bot")
 
 	flag.Parse()
 
